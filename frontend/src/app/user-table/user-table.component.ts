@@ -18,8 +18,12 @@ export class UserTableComponent implements OnInit {
   }
 
   fetchUsers() {
+    console.log("called");
+    
     this.userService.getAllUsers().subscribe(users => {
       this.users = users;
+      console.log("users", users);
+      
     });
   }
 

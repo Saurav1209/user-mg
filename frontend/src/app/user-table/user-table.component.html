@@ -1,28 +1,32 @@
 <div class="container mt-4">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone Number</th>
-          <th>Address</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phoneNumber }}</td>
-          <td>{{ user.address }}</td>
-          <td>
-            <button (click)="editUser(user)" class="btn btn-primary btn-sm">Edit</button>
-            <button (click)="deleteUser(user.id)" class="btn btn-danger btn-sm">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <ng-container *ngIf="users.length == 0"><h1 class="text-danger">Please Add Users Data.</h1></ng-container>
+    <ng-container *ngIf="users.length >0 " >
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phoneNumber }}</td>
+            <td>{{ user.address }}</td>
+            <td>
+              <button (click)="editUser(user)" class="btn btn-primary btn-sm">Edit</button>
+              <button (click)="deleteUser(user.id)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button (click)="generatePDF()" class="btn btn-secondary mt-2">Generate PDF</button>
+    </ng-container>
    
-    <button (click)="generatePDF()" class="btn btn-secondary mt-2">Generate PDF</button>
+  
   </div>
   
