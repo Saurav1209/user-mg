@@ -1,1 +1,7 @@
-<p>user-pdf-view works!</p>
+<div class="container mt-4">
+    <h3>PDF Viewer</h3>
+    <div *ngIf="pdfUrl">
+      <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
+    </div>
+  </div>
+  
