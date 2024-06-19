@@ -10,7 +10,8 @@ import { User } from '../user.model';
 export class UserFormComponent implements OnInit {
   user: Partial<User> = {};
   isEditing = false;
-
+  isOpen = false;
+  isEditMode = false;
   constructor(private userService: UserService) {}
 
   ngOnInit() {
@@ -19,14 +20,24 @@ export class UserFormComponent implements OnInit {
       if (editingUser) {
         this.user = editingUser;
         this.isEditing = true;
+       this.isEditMode =true ;
       } else {
         this.resetForm();
         this.isEditing = false;
+       this.isEditMode = false;
       }
       
     });
   }
- 
+  openModal() {
+    this.isOpen = true;
+  }
+
+  closeModal() {
+    this.resetForm();
+    this.isOpen = false;
+    this.isEditMode = false;
+  }
   onSubmit() {
     if (this.isEditing) {
       this.userService.updateUser(this.user.id, this.user).subscribe(updatedUser => {
@@ -52,7 +63,7 @@ export class UserFormComponent implements OnInit {
         console.error('Error creating user:', error);
       });
     }
-   
+    this.closeModal();
 
   }
 
