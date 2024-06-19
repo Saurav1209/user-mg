@@ -1,9 +1,10 @@
-<div class="container mt-4">
+<div class="container mt-4 ">
   <ng-container *ngIf="users.length == 0"><h1 class="text-danger">Please Add Users Data.</h1></ng-container>
     <ng-container *ngIf="users.length >0 " >
-      <table class="table table-bordered" style="border-radius: 100px;">
+      <table class="table table-bordered styled-table" >
         <thead>
           <tr>
+            <th>Sr. No.</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone Number</th>
@@ -12,20 +13,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users">
+          <tr *ngFor="let user of users ; let i = index" >
+            <td>{{i+1 }}</td>
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.phoneNumber }}</td>
             <td>{{ user.address }}</td>
             <td>
-              <button (click)="editUser(user)" class="btn btn-primary btn-sm">Edit</button>
-              <button (click)="deleteUser(user.id)" class="btn btn-danger btn-sm">Delete</button>
+              <button (click)="editUser(user)"  class="btn btn-primary btn-sm py-2 px-3 rounded  me-1">
+                <i class="bi bi-pencil">
+                  Edit</i>
+                </button>
+              <button (click)="deleteUser(user.id)"  class="btn btn-danger btn-sm py-2 px-2 rounded ms-2 ">
+                <i class="bi bi-trash"></i>
+                Delete
+              </button>
+            
             </td>
           </tr>
         </tbody>
       </table>
-      <button (click)="downloadPDF()" class="btn btn-secondary mt-2">Download PDF</button>
-      <button (click)="viewPDF()" class="btn btn-secondary mt-2">View PDF</button>
+     <div class="d-flex justify-content-end">
+      <button (click)="downloadPDF()" class="btn btn-success py-2 px-2 rounded mt-3 me-1"> Download PDF <i class="bi bi-download"></i> </button>
+      <button (click)="viewPDF()"  class="btn btn-success py-2 px-4 rounded mt-3 ms-1"> View PDF <i class="bi bi-eye"></i> </button>
+     </div>
     </ng-container>
    
   

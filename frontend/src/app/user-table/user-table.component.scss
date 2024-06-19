@@ -1,0 +1,18 @@
+.styled-table {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-width: 1px;
+    // border-collapse: separate;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  .styled-table thead {
+    background-color: #2d649b;
+    color: white;
+    border-bottom: 2px solid  !important; /* Add a horizontal border after the thead */
+  }
+  .styled-table thead tr {
+    border-bottom: 2px solid #dee2e6; /* Add a horizontal border after the thead */
+  }
