@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserTableComponent } from './user-table/user-table.component';
-import { UserPdfViewComponent } from './user-pdf-view/user-pdf-view.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -13,7 +12,6 @@ import { FormsModule } from '@angular/forms';
     AppComponent,
     UserFormComponent,
     UserTableComponent,
-    UserPdfViewComponent
   ],
   imports: [
     BrowserModule,

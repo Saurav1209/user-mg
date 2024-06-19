@@ -39,17 +39,17 @@ export class UserService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  generatePDF(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/pdf/generate`, { responseType: 'blob' });
-  }
-  getPdf(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/pdf/view`, { responseType: 'blob' });
-  }
 
+  viewPDF(): void {
+    window.open(`${this.apiUrl}/pdf/generate`, '_blank');
+  }
+  
+  downloadPDF(): void {
+    window.open(`${this.apiUrl}/pdf/generate?download=true`, '_blank');
+  }
   getEditingUser(): Observable<User | null> {
     return this.editingUser.asObservable();
   }
-
   setEditingUser(user: User | null) {
     this.editingUser.next(user);
   }

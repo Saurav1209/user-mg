@@ -36,10 +36,11 @@ export class UserTableComponent implements OnInit {
       this.fetchUsers();
     });
   }
+  downloadPDF() {
+    this.userService.downloadPDF();
+  }
 
-  generatePDF() {
-    this.userService.generatePDF().subscribe(blob => {
-      // saveAs(blob, 'users.pdf');
-    });
+  viewPDF() {
+    this.userService.viewPDF();
   }
 }

@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Res, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { Response } from 'express';
-import * as pdf from 'html-pdf';
+// import * as pdf from 'html-pdf';
+import * as PDFDocument from 'pdfkit';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get()
   findAll(): User[] {
@@ -33,70 +34,50 @@ export class UserController {
     this.userService.remove(+id);
   }
 
-  @Post(':id/pdf')
-  async generatePDF(@Param('id') id: string, @Res() res: Response): Promise<void> {
-    const user = this.userService.findOne(+id);
-    if (!user) {
-      res.status(404).send('User not found');
-      return;
+  @Get('pdf/generate')
+  async generatePDF(@Res() res: Response, @Query('download') download: string): Promise<void> {
+    const users = this.userService.findAll();
+
+    const doc = new PDFDocument();
+    const filename = 'users.pdf';
+
+    if (download) {
+      res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    } else {
+      res.setHeader('Content-Disposition', `inline; filename=${filename}`);
     }
 
-    const html = `
-      <html>
-        <head>
-          <title>User Information</title>
-        </head>
-        <body>
-          <h1>User Information</h1>
-          <p><strong>Name:</strong> ${user.name}</p>
-          <p><strong>Email:</strong> ${user.email}</p>
-          <p><strong>Phone Number:</strong> ${user.phoneNumber}</p>
-          <p><strong>Address:</strong> ${user.address}</p>
-        </body>
-      </html>
-    `;
+    res.setHeader('Content-Type', 'application/pdf');
 
-    pdf.create(html).toStream((err, stream) => {
-      if (err) {
-        res.status(500).send('Error generating PDF');
-        return;
-      }
-      res.setHeader('Content-Type', 'application/pdf');
-      stream.pipe(res);
+    doc.pipe(res);
+
+    doc.fontSize(20).text('User Information', { align: 'center' }).moveDown(2.5);
+
+    const pageWidth = 595; // Width of the A4 page in points
+    const rightMargin = 20; // Desired right margin in points
+    const tableTop = 100;
+    const itemMargin = 30;
+    const itemHeight = 30;
+    const colWidths = [50, 100, 150, 100, 175]; // Adjusted last column width to leave 20-point right margin
+
+    // Draw table headers
+    doc.fontSize(12).text('S.No', 50, tableTop, { width: colWidths[0], align: 'left' });
+    doc.fontSize(12).text('Name', 100, tableTop, { width: colWidths[1], align: 'left' });
+    doc.fontSize(12).text('Email', 200, tableTop, { width: colWidths[2], align: 'left' });
+    doc.fontSize(12).text('Phone Number', 350, tableTop, { width: colWidths[3], align: 'left' });
+    doc.fontSize(12).text('Address', 450, tableTop, { width: colWidths[4], align: 'left' });
+
+    // Draw table rows
+    users.forEach((user, index) => {
+      const y = tableTop + itemMargin + index * itemHeight;
+      doc.fontSize(10).text(`${index + 1}`, 50, y, { width: colWidths[0], align: 'left' }); // Serial number
+      doc.fontSize(10).text(user.name, 100, y, { width: colWidths[1], align: 'left' });
+      doc.fontSize(10).text(user.email, 200, y, { width: colWidths[2], align: 'left' });
+      doc.fontSize(10).text(user.phoneNumber, 350, y, { width: colWidths[3], align: 'left' });
+      doc.fontSize(10).text(user.address, 450, y, { width: colWidths[4], align: 'left' });
     });
+
+    doc.end();
   }
 
-  @Get(':id/pdf')
-  async retrievePDF(@Param('id') id: string, @Res() res: Response): Promise<void> {
-    const user = this.userService.findOne(+id);
-    if (!user) {
-      res.status(404).send('User not found');
-      return;
-    }
-
-    const html = `
-      <html>
-        <head>
-          <title>User Information</title>
-        </head>
-        <body>
-          <h1>User Information</h1>
-          <p><strong>Name:</strong> ${user.name}</p>
-          <p><strong>Email:</strong> ${user.email}</p>
-          <p><strong>Phone Number:</strong> ${user.phoneNumber}</p>
-          <p><strong>Address:</strong> ${user.address}</p>
-        </body>
-      </html>
-    `;
-
-    pdf.create(html).toBuffer((err, buffer) => {
-      if (err) {
-        res.status(500).send('Error generating PDF');
-        return;
-      }
-      res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename=user.pdf');
-      res.send(buffer);
-    });
-  }
 }
